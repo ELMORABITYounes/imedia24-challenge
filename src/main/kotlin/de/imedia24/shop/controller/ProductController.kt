@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -26,4 +27,14 @@ class ProductController(private val productService: ProductService) {
             ResponseEntity.ok(product)
         }
     }
+
+    @GetMapping("/products", produces = ["application/json;charset=utf-8"])
+    fun findProductsBySkus(
+        @RequestParam("skus") skus: List<String>
+    ): ResponseEntity<List<ProductResponse>> {
+        val products = productService.findProductsBySkus(skus)
+        return ResponseEntity.ok(products)
+    }
+
+
 }

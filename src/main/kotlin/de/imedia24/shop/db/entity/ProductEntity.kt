@@ -24,6 +24,9 @@ data class ProductEntity(
     @Column(name = "price", nullable = false)
     val price: BigDecimal,
 
+    @Column(name = "stock_level", nullable = false)
+    val stockLevel: Int,
+
     @UpdateTimestamp
     @Column(name = "created_at", nullable = false)
     val createdAt: ZonedDateTime,
