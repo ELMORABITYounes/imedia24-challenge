@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
-import javax.websocket.server.PathParam
 
 @RestController
 class ProductController(private val productService: ProductService) {
@@ -18,10 +17,10 @@ class ProductController(private val productService: ProductService) {
     fun findProductsBySku(
         @PathVariable("sku") sku: String
     ): ResponseEntity<ProductResponse> {
-        logger.info("Request for product $sku")
 
         val product = productService.findProductBySku(sku)
         return if(product == null) {
+            logger.error("No product found for sku : $sku")
             ResponseEntity.notFound().build()
         } else {
             ResponseEntity.ok(product)
