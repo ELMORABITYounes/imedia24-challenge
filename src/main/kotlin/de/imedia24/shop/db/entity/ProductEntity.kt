@@ -1,12 +1,17 @@
 package de.imedia24.shop.db.entity
 
 import org.hibernate.annotations.UpdateTimestamp
+import org.springframework.data.domain.Persistable
 import java.math.BigDecimal
 import java.time.ZonedDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Table
+import javax.persistence.PrePersist
+import javax.persistence.PostLoad
+import kotlin.jvm.Transient
+
 
 @Entity
 @Table(name = "products")
@@ -16,16 +21,16 @@ data class ProductEntity(
     val sku: String,
 
     @Column(name = "name", nullable = false)
-    val name: String,
+    var name: String,
 
     @Column(name = "description")
-    val description: String? = null,
+    var description: String? = null,
 
     @Column(name = "price", nullable = false)
-    val price: BigDecimal,
+    var price: BigDecimal,
 
     @Column(name = "stock_level", nullable = false)
-    val stockLevel: Int,
+    var stockLevel: Int,
 
     @UpdateTimestamp
     @Column(name = "created_at", nullable = false)
@@ -33,5 +38,24 @@ data class ProductEntity(
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    val updatedAt: ZonedDateTime
-)
+    var updatedAt: ZonedDateTime
+) : Persistable<String> {
+
+    @Transient
+    var new = false
+
+    override fun isNew(): Boolean {
+        return new
+    }
+
+    override fun getId(): String {
+        return sku
+    }
+
+    @PrePersist
+    @PostLoad
+    fun markNotNew() {
+        new = false
+    }
+
+}
